@@ -26,4 +26,5 @@ jobs:
           message: "From PR"
           # Path of the file that should be commented
           pr_number: 2
+          GITHUB_TOKEN: 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
    
