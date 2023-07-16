@@ -18,16 +18,15 @@ jobs:
     steps:
       - uses: _actions/checkout@v2
       - name: hello world
-        run: echo "Hello World"
+        run: |
+            gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/sreedhargs89/githubActionPOC/issues/2/comments \
+            -f body='Me too other
         shell: bash
-
-  goodbye:
-    runs-on: ubuntu-latest
-    steps: 
-      - name: goodbue world
-        run: echo "Goodbye world"
-        shell: bash
-
+        
   commentPR-api:
     runs-on: ubuntu-latest
     steps:
@@ -38,4 +37,4 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/sreedhargs89/githubActionPOC/issues/2/comments \
-            -f body='Me too' 
+            -f body='Me PR |
