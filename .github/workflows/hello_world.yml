@@ -18,12 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Comment PR
-        # You may pin to the exact commit or the version.
-        # uses: thollander/actions-comment-pull-request@dadb7667129e23f12ca3925c90dc5cd7121ab57e
         uses: thollander/actions-comment-pull-request@v2.4.0
         with:
           # Message that should be printed in the pull request
-          message: "From PR"
+          message: "From PR update the netiquites"
           # Path of the file that should be commented
-          pr_number: 2
+          pr_number: ${{github.event.issue.number}}
    
