@@ -38,7 +38,8 @@ jobs:
           /repos/OWNER/REPO/issues/ISSUE_NUMBER/comments \
           -f body='Me too' 
           env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
 
        
   comment-with-actions:
