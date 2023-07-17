@@ -21,7 +21,7 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2.4.0
         with:
           # Message that should be printed in the pull request
-          message: "From PR update the netiquites"
+          message: "Kindly check the Netiquette document and ensure your PR adhere to that"
           # Path of the file that should be commented
           pr_number: ${{github.event.issue.number}}
    
