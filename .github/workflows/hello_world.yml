@@ -18,10 +18,13 @@ jobs:
     steps:
       - name: Comment PR with API
         run: |
-          gh api -X POST \
-          http://api.github.com/repo/${ORGANISATION}/${REPOSITORY}/issues/${ISSUE_NUMBER}/comments
+          gh api \
+          --method POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /repos/${ORGANISATION}/${REPOSITORY}/issues/${ISSUE_NUMBER}/comments
           -f body ='
-          Commment using API call
+          Commment created using api call
           '
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
