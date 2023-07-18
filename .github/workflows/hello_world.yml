@@ -1,5 +1,6 @@
 name: Hello World Workflow
 
+
 on:
   push:
     branches:
@@ -50,7 +51,12 @@ jobs:
   message-checker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
       - uses: dylanvann/check-pull-request-title@v0.1.14
         with:
           # Match pull request titles in the form UI-1234 - Message.
