@@ -1,4 +1,4 @@
-# GitHub Actions POC
+# GitHub Actions POC - A pilot to test the github actions
 
 ## Introduction
 
