@@ -1,0 +1,36 @@
+name: Pull Request Comment Management
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  pull_request_review_comment:
+    types: [created, edited]
+  # You can add more events to trigger the workflow as needed, e.g., "labeled"
+
+jobs:
+  manage_pull_request_comments:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Create or Update Comment
+        uses: repo-sync/github-comment@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            This is your comment's content for the pull request.
+            You can use Markdown here!
+
+      - name: Delete Comment
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.state == 'closed' }}
+        uses: repo-sync/github-comment@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            This comment will be deleted when the pull request is closed.
