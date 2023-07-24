@@ -1,0 +1,36 @@
+name: PR Comment Checker
+
+on:
+  pull_request:
+    types: [opened, edited]
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  check_pr_comments:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Get PR Comments
+        id: get_comments
+        run: |
+          COMMENTS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" | jq -r '.[] | select(.user.login == "github-actions[bot]") | .body')
+
+          # Check if the specific string exists in the comments
+          if echo "$COMMENTS" | grep -q "specific string"; then
+            echo "::set-output name=comment_exists::true"
+          else
+            echo "::set-output name=comment_exists::false"
+          fi
+
+      - name: Create Comment
+        if: steps.get_comments.outputs.comment_exists == 'false'
+        run: |
+          COMMENT="This is the comment to be added."
+          curl -s -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -d "{\"body\":\"$COMMENT\"}" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
