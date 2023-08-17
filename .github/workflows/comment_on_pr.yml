@@ -1,5 +1,5 @@
 name: Add comment with Netiquette guidelines for PR
-
+//test2 on pr comment
 on:
   pull_request:
     types:
