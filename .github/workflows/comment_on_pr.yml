@@ -1,0 +1,24 @@
+name: Add Comment to Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened  # You can customize the trigger event based on your needs
+  workflow_dispatch:  # This allows manual triggering
+
+jobs:
+  add_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Add a comment to pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMENT_BODY="Your comment here."
+          ISSUE_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          curl -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
+               -d "{\"body\": \"$COMMENT_BODY\"}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/comments"
