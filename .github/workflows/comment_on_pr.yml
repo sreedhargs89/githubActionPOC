@@ -16,7 +16,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          COMMENT_BODY="As a skilled developer, you adhere to the following etiquette guidelines to enhance your contributions: - https://github.wdf.sap.corp/cf-internal-realm/Documentation/blob/master/OpsDevOpsDevOpsDev/live-netiquette.md"
+          COMMENT_BODY="Test1: As a skilled developer, you adhere to the following etiquette guidelines to enhance your contributions: - https://github.wdf.sap.corp/cf-internal-realm/Documentation/blob/master/OpsDevOpsDevOpsDev/live-netiquette.md"
           PR_NUMBER=${{ github.event.pull_request.number }}
           curl -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
                -d "{\"body\": \"$COMMENT_BODY\"}" \
