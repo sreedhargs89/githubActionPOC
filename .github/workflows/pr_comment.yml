@@ -4,10 +4,12 @@ on:
   pull_request:
     types:
       - opened
+  workflow_dispatch:  # Add manual trigger event
+
 
 jobs:
   add_comment:
-    runs-on: [self-hosted, solinas]
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
