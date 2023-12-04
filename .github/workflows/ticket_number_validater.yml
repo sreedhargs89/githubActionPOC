@@ -36,10 +36,17 @@ jobs:
           echo "Extracted Ticket: '$extracted_ticket'"
           echo "::set-output name=extracted-ticket::$extracted_ticket"
 
-      - name: Thank User and Echo Extracted Ticket
+      - name: Thank User and Add Comment with Extracted Ticket
         if: steps.extract-ticket.outputs.extracted-ticket != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Thank you for mentioning HCPCM ticket ${{ steps.extract-ticket.outputs.extracted-ticket }}!"
+          COMMENT_BODY="Thank you for mentioning HCPCM ticket ${{ steps.extract-ticket.outputs.extracted-ticket }}!"
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          curl -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
+               -H "Content-Type: application/json" \
+               -d "{\"body\": \"$COMMENT_BODY\"}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments"
 
       - name: Add Comment if Ticket is Missing
         if: steps.check-description.outputs.ticket-missing == 'true' && !steps.extract-ticket.outputs.extracted-ticket
