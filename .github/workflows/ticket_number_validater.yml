@@ -17,9 +17,14 @@ jobs:
       - name: Check PR Description
         id: check-description
         run: |
+          echo "PR Description: '${{ github.event.pull_request.body }}'"
           pattern="HCPCM-[0-9]+"
+          echo "Pattern: $pattern"
           if ! grep -qE "$pattern" <<< "${{ github.event.pull_request.body }}"; then
+            echo "Pattern not found!"
             echo "::set-output name=ticket-missing::true"
+          else
+            echo "Pattern found!"
           fi
 
       - name: Add Comment if Ticket is Missing
