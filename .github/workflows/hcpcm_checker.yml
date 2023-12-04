@@ -39,3 +39,14 @@ jobs:
                -H "Content-Type: application/json" \
                -d "{\"body\": \"$COMMENT_BODY\"}" \
                "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments"
+      
+      - name: Disable Merge Option if Ticket is Missing
+        if: steps.extract-ticket.outputs.extracted-ticket == '' || steps.extract-ticket.outputs.extracted-ticket == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          curl -X PUT -H "Authorization: Bearer $GITHUB_TOKEN" \
+               -H "Content-Type: application/json" \
+               -d "{\"enforce_admins\": true, \"required_status_checks\": null, \"restrictions\": null}" \
+               "https://api.github.com/repos/${{ github.repository }}/branches/${{ github.event.pull_request.head.ref }}/protection"
