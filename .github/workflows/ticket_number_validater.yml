@@ -4,7 +4,11 @@ on:
     types:
       - opened
       - synchronize
-
+  workflow_dispatch:
+    inputs:
+      manual-trigger:
+        description: 'Manually trigger the workflow'
+        default: 'false'
 jobs:
   check-ticket:
     runs-on: ubuntu-latest
@@ -13,7 +17,7 @@ jobs:
       - name: Check PR Description
         id: check-description
         run: |
-          pattern="ABCDE-[0-9]+"
+          pattern="\[HCPCM-[0-9]+\]"
           if ! grep -qE "$pattern" <<< "${{ github.event.pull_request.body }}"; then
             echo "::set-output name=ticket-missing::true"
           fi
@@ -23,7 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          COMMENT_BODY="Please include Proper ticket number"
+          COMMENT_BODY="Please include a valid HCPCM ticket number in the PR description."
           PR_NUMBER=${{ github.event.pull_request.number }}
           curl -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
                -H "Content-Type: application/json" \
