@@ -9,6 +9,7 @@ on:
       manual-trigger:
         description: 'Manually trigger the workflow'
         default: 'false'
+
 jobs:
   check-ticket:
     runs-on: ubuntu-latest
@@ -31,9 +32,9 @@ jobs:
         if: steps.extract-ticket.outputs.extracted-ticket
         run: |
           echo "Thank you for mentioning HCPCM ticket ${{ steps.extract-ticket.outputs.extracted-ticket }}!"
-      
+
       - name: Add Comment if Ticket is Missing
-        if: steps.check-description.outputs.ticket-missing == 'true'
+        if: steps.check-description.outputs.ticket-missing == 'true' && !steps.extract-ticket.outputs.extracted-ticket
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
