@@ -31,7 +31,7 @@ jobs:
         run: |
           PR_NUMBER=${{ github.event.pull_request.number }}
           if [ -n "${{ steps.extract-ticket.outputs.extracted-ticket }}" ]; then
-            COMMENT_BODY="Thank you for mentioning HCPCM ticket ${{ steps.extract-ticket.outputs.extracted-ticket }}!"
+            COMMENT_BODY="Thank you for mentioning ticket ${{ steps.extract-ticket.outputs.extracted-ticket }}!"
           else
             COMMENT_BODY="Please include a valid HCPCM ticket number in the PR description."
           fi
