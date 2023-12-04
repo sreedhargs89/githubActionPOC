@@ -28,7 +28,12 @@ jobs:
           elif [ -n "$description_match" ]; then
             extracted_ticket="$description_match"
           fi
-      
+
+          echo "Title: '${{ github.event.pull_request.title }}'"
+          echo "Description: '${{ github.event.pull_request.body }}'"
+          echo "Title Match: '$title_match'"
+          echo "Description Match: '$description_match'"
+          echo "Extracted Ticket: '$extracted_ticket'"
           echo "::set-output name=extracted-ticket::$extracted_ticket"
 
       - name: Thank User and Echo Extracted Ticket
