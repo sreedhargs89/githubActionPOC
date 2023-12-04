@@ -49,7 +49,7 @@ jobs:
                "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments"
 
       - name: Add Comment if Ticket is Missing
-        if: steps.check-description.outputs.ticket-missing == 'true' && !steps.extract-ticket.outputs.extracted-ticket
+        if: steps.check-description.outputs.ticket-missing == 'true' || !steps.extract-ticket.outputs.extracted-ticket
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
