@@ -1,0 +1,41 @@
+name: Check Ticket Number
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  check-ticket:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract HCPCM Ticket Number from PR Title or Description
+        id: extract-ticket
+        run: |
+          pattern="HCPCM-[0-9]+"
+          title_match=$(grep -oE "$pattern" <<< "${{ github.event.pull_request.title }}") || true
+          description_match=$(grep -oE "$pattern" <<< "${{ github.event.pull_request.body }}") || true
+      
+          extracted_ticket=""
+          if [ -n "$title_match" ]; then
+            extracted_ticket="$title_match"
+          elif [ -n "$description_match" ]; then
+            extracted_ticket="$description_match"
+          fi
+
+          echo "::set-output name=extracted-ticket::$extracted_ticket"
+
+      - name: Add Comment Based on Extracted Ticket
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          if [ -n "${{ steps.extract-ticket.outputs.extracted-ticket }}" ]; then
+            COMMENT_BODY="Thank you for mentioning HCPCM ticket ${{ steps.extract-ticket.outputs.extracted-ticket }}!"
+          else
+            COMMENT_BODY="Please include a valid HCPCM ticket number in the PR description."
+          fi
+          curl -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
+               -H "Content-Type: application/json" \
+               -d "{\"body\": \"$COMMENT_BODY\"}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments"
