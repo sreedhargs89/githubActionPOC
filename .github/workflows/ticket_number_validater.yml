@@ -14,16 +14,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check PR Description
-        id: check-description
+      - name: Extract HCPCM Ticket Number from PR Title or Description
+        id: extract-ticket
         run: |
           pattern="HCPCM-[0-9]+"
-          title_matched=$(grep -qE "$pattern" <<< "${{ github.event.pull_request.title }}"; echo $?)
-          description_matched=$(grep -qE "$pattern" <<< "${{ github.event.pull_request.body }}"; echo $?)
-
-          if [ "$title_matched" -ne 0 -a "$description_matched" -ne 0 ]; then
-            echo "::set-output name=ticket-missing::true"
+          title_match=$(grep -oE "$pattern" <<< "${{ github.event.pull_request.title }}")
+          description_match=$(grep -oE "$pattern" <<< "${{ github.event.pull_request.body }}")
+          if [ -n "$title_match" ]; then
+            extracted_ticket="$title_match"
+          elif [ -n "$description_match" ]; then
+            extracted_ticket="$description_match"
           fi
+          echo "::set-output name=extracted-ticket::$extracted_ticket"
+
+      - name: Thank User and Echo Extracted Ticket
+        if: steps.extract-ticket.outputs.extracted-ticket
+        run: |
+          echo "Thank you for mentioning HCPCM ticket ${{ steps.extract-ticket.outputs.extracted-ticket }}!"
+      
       - name: Add Comment if Ticket is Missing
         if: steps.check-description.outputs.ticket-missing == 'true'
         env:
