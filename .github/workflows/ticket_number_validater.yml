@@ -21,13 +21,14 @@ jobs:
           pattern="HCPCM-[0-9]+"
           title_match=$(grep -oE "$pattern" <<< "${{ github.event.pull_request.title }}") || true
           description_match=$(grep -oE "$pattern" <<< "${{ github.event.pull_request.body }}") || true
-
+      
+          extracted_ticket=""
           if [ -n "$title_match" ]; then
             extracted_ticket="$title_match"
           elif [ -n "$description_match" ]; then
             extracted_ticket="$description_match"
           fi
-
+      
           echo "::set-output name=extracted-ticket::$extracted_ticket"
 
       - name: Thank User and Echo Extracted Ticket
