@@ -32,7 +32,7 @@ jobs:
           echo "::set-output name=extracted-ticket::$extracted_ticket"
 
       - name: Thank User and Echo Extracted Ticket
-        if: steps.extract-ticket.outputs.extracted-ticket
+        if: steps.extract-ticket.outputs.extracted-ticket != ''
         run: |
           echo "Thank you for mentioning HCPCM ticket ${{ steps.extract-ticket.outputs.extracted-ticket }}!"
 
