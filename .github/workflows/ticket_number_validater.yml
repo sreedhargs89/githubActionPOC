@@ -17,7 +17,7 @@ jobs:
       - name: Check PR Description
         id: check-description
         run: |
-          pattern="\[HCPCM-[0-9]+\]"
+          pattern="HCPCM-[0-9]+"
           if ! grep -qE "$pattern" <<< "${{ github.event.pull_request.body }}"; then
             echo "::set-output name=ticket-missing::true"
           fi
