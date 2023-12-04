@@ -1,0 +1,33 @@
+name: Check Ticket Number
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  check-ticket:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check PR Description
+        id: check-description
+        run: |
+          pattern="ABCDE-[0-9]+"
+          if ! grep -qE "$pattern" <<< "${{ github.event.pull_request.body }}"; then
+            echo "::set-output name=ticket-missing::true"
+          fi
+
+      - name: Add Comment if Ticket is Missing
+        if: steps.check-description.outputs.ticket-missing == 'true'
+        uses: actions/github-script@0.11.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const response = await github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Please include a valid ABCDE ticket number in the PR description.'
+            });
+            core.setOutput('comment-id', response.data.id);
