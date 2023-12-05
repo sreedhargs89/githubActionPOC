@@ -56,7 +56,7 @@ jobs:
       - name: Disable Merge Option if Ticket is Missing
         if: steps.extract-ticket.outputs.extracted-ticket == '' || steps.extract-ticket.outputs.extracted-ticket == 'true'
         env:
-          GITHUB_TOKEN: "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"
+          GITHUB_TOKEN: ${{ secrets.SREE_Actions }}
         run: |
           PR_NUMBER=${{ github.event.pull_request.number }}
           if [ -z "${{ steps.extract-ticket.outputs.extracted-ticket }}" ]; then
