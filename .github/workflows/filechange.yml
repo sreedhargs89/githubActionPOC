@@ -15,7 +15,7 @@ jobs:
       - name: Process files changed in the current commit
         run: |
           # Get list of changed files in the PR
-          changedFiles=$(git diff --name-only HEAD^)
+          changedFiles=$(git diff-tree --no-commit-id --name-only -r HEAD)
       
           # Display all changed files for debugging purposes
           echo "Changed files:"
