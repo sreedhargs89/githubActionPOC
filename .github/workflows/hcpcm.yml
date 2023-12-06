@@ -20,10 +20,12 @@ jobs:
         run: |
           changedFiles=$(git diff --name-only HEAD^)
           for file in $changedFiles; do
-            if($file == "ignore1.txt")
+            if [ "$file" == "ignore1.txt" ]; then
               echo "Processing file: $file"
               echo "::set-output name=specific-file-changed::true"
+            fi
           done
+
 
       - name: Checkout Repository
         uses: actions/checkout@v2
