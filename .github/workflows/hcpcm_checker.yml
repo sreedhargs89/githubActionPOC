@@ -19,6 +19,17 @@ jobs:
           else
             echo "::set-output name=specific-files-changed::false"
           fi
+          
+      - name: Debug File Changes
+        run: |
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }}
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E 'ignore2.txt|ignore1.txt'; then
+            echo "Files have changed."
+            echo "::set-output name=specific-files-changed::true"
+          else
+            echo "No changes in specified files."
+            echo "::set-output name=specific-files-changed::false"
+          fi
 
       - name: Extract HCPCM Ticket Number from PR Title or Description
         id: extract-ticket
