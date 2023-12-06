@@ -22,10 +22,11 @@ jobs:
           echo "$changedFiles"
       
           # Check if specific files are changed and set output accordingly
-          if echo "$changedFiles" | grep -E 'ignore1.txt|ignore2.txt'; then
-            echo "Specific files (ignore1.txt or ignore2.txt) have been changed."
+          if echo "$changedFiles" | grep -E 'ignore1.txt'; then
+            echo "Specific files (ignore1.txt) have been changed."
             echo "::set-output name=specific-files-changed::true"
           else
-            echo "No changes detected in ignore1.txt or ignore2.txt."
+            echo "No changes detected in ignore1.txt."
             echo "::set-output name=specific-files-changed::false"
           fi
+
