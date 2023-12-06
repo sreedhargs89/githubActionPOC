@@ -1,32 +1,22 @@
-name: Changed files
+name: Echo Changed File Names
 
 on:
   pull_request:
-    types:
-      - opened
+    types: [opened, synchronize]
+  workflow_dispatch:
+    inputs:
+      manualTrigger:
+        description: 'Manually trigger the workflow'
 
 jobs:
-  check-ticket:
+  echo-changed-files:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Process files changed in the current commit
-        run: |
-          # Get list of changed files in the PR
-          changedFiles=$(git diff-tree --no-commit-id --name-only -r HEAD)
-      
-          # Display all changed files for debugging purposes
-          echo "Changed files:"
-          echo "$changedFiles"
-      
-          # Check if specific files are changed and set output accordingly
-          if echo "$changedFiles" | grep -E 'ignore1.txt'; then
-            echo "Specific files (ignore1.txt) have been changed."
-            echo "::set-output name=specific-files-changed::true"
-          else
-            echo "No changes detected in ignore1.txt."
-            echo "::set-output name=specific-files-changed::false"
-          fi
 
+      - name: Echo names of changed files
+        run: |
+          echo "Files changed in this pull request:"
+          git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
