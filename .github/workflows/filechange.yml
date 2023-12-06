@@ -1,4 +1,4 @@
-name: PR HCPCM Validator
+name: Changed files
 
 on:
   pull_request:
@@ -10,41 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout (fetch last two commits) of the PR
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 2
-
       - name: Process files changed in the current commit
         run: |
+          # Get list of changed files in the PR
           changedFiles=$(git diff --name-only HEAD^)
-          for file in $changedFiles; do
-            if [ "$file" == "ignore1.txt" ]; then
-              echo "Processing file: $file"
-              echo "::set-output name=specific-file-changed::true"
-            fi
-          done
-
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Check for Specific File Changes
-        id: check-file-changes
-        run: |
-          # Specify the path of the file you want to check
-          file_to_check="ignore1.txt"
-
-          # Check if the specific file has changed
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
-          cat changed_files.txt  # Debug: Output the changed files list for inspection
-
-          if grep -q "$file_to_check" changed_files.txt; then
-            echo "The file $file_to_check has changed."
-            echo "::set-output name=specific-file-changed::true"
+      
+          # Display all changed files for debugging purposes
+          echo "Changed files:"
+          echo "$changedFiles"
+      
+          # Check if specific files are changed and set output accordingly
+          if echo "$changedFiles" | grep -E 'ignore1.txt|ignore2.txt'; then
+            echo "Specific files (ignore1.txt or ignore2.txt) have been changed."
+            echo "::set-output name=specific-files-changed::true"
           else
-            echo "No changes in the file $file_to_check."
-            echo "::set-output name=specific-file-changed::false"
+            echo "No changes detected in ignore1.txt or ignore2.txt."
+            echo "::set-output name=specific-files-changed::false"
           fi
-
-      # ... (rest of your workflow)
