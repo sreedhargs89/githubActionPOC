@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
       - name: Process files changed in the current commit
         run: |
           # Get list of changed files in the PR
