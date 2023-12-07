@@ -2,7 +2,7 @@ name: PR HCPCM Validator
 
 on:
   pull_request:
-    types: [created, edited]
+    types: [opened, edited]
 
 jobs:
   check-ticket:
