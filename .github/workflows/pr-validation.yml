@@ -20,7 +20,32 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            // The same validation script as before
+            const title = github.context.payload.pull_request.title;
+            const body = github.context.payload.pull_request.body;
+            const issueRegex = /HCPCM-\d+/; // Regex to match the ticket format
+            
+            if (!title || !body) {
+              console.log('Missing PR details.');
+              process.exit(1);
+            }
+            
+            if (!issueRegex.test(title) || !issueRegex.test(body)) {
+              const comment = 'This PR title or description doesn\'t contain a valid ticket number. Please edit the PR and add a relevant ticket number.';
+              const response = await github.issues.createComment({
+                issue_number: context.payload.pull_request.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment,
+              });
+            } else {
+              const comment = 'Thanks for this PR - Hope you have followed all the guidelines. [Guideline Link]';
+              const response = await github.issues.createComment({
+                issue_number: context.payload.pull_request.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment,
+              });
+            }
 
       - name: Handle PR Title Edits
         if: github.event_name != 'workflow_dispatch' # Don't handle edits on manual trigger
