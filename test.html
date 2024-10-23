@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Redirect to JSON Files</title>
+    <script>
+        function redirectToFile() {
+            var selectedOption = document.getElementById("fileSelect").value;
+            
+            if (selectedOption === "2025") {
+                window.location.href = "path/to/2025_dates.json";
+            } else if (selectedOption === "2024") {
+                window.location.href = "path/to/2024_dates.json";
+            } else if (selectedOption === "2023") {
+                window.location.href = "path/to/2023_dates.json";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Select a JSON File</h1>
+    <label for="fileSelect">Choose a file:</label>
+    <select id="fileSelect" onchange="redirectToFile()">
+        <option value="">-- Select a file --</option>
+        <option value="2025">2025_dates.json</option>
+        <option value="2024">2024_dates.json</option>
+        <option value="2023">2023_dates.json</option>
+    </select>
+</body>
+</html>
